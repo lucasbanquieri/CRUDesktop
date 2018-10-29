@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Funcionario extends Pessoa {
 	private double salario;
@@ -10,17 +11,31 @@ public class Funcionario extends Pessoa {
 	private int Kids;
 	private String cargo;
 	private int codCadastro;
+	private String disciplina;
+	private List<Kid> arrayKids;
 	
-	public Funcionario(String nome, long cpf, Date dataNascimento, String sexo, String endereco, String email,
-			String telefone, double salario, double vA, double vR, double vT, int kids, String cargo, int codCadastro) {
-		super(nome, cpf, dataNascimento, sexo, endereco, email, telefone);
+	public Funcionario(String cpf, String telefone, String nome, Date dataNascimento, String sexo, String endereco,
+			String email, double salario, double vA, double vR, double vT, int kids, String cargo, String disciplina) {
+		super(cpf, telefone, nome, dataNascimento, sexo, endereco, email);
 		this.salario = salario;
 		VA = vA;
 		VR = vR;
 		VT = vT;
 		Kids = kids;
 		this.cargo = cargo;
-		this.codCadastro = codCadastro;
+		this.disciplina = disciplina;
+	}
+	
+	public Funcionario() {
+		super();
+	}
+
+	public String getDisciplina() {
+		return disciplina;
+	}
+
+	public void setDisciplina(String disciplina) {
+		this.disciplina = disciplina;
 	}
 
 	public double getSalario() {
@@ -77,5 +92,14 @@ public class Funcionario extends Pessoa {
 
 	public void setCodCadastro(int codCadastro) {
 		this.codCadastro = codCadastro;
-	}	
+	}
+
+	public List<Kid> getArrayKids() {
+		return arrayKids;
+	}
+
+	public void setArrayKids(List<Kid> arrayKids) {
+		this.arrayKids = arrayKids;
+	}
+	
 }

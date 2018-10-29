@@ -1,5 +1,6 @@
 package controller;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.InputMismatchException;
@@ -27,6 +28,29 @@ public class Util {
 			pe.printStackTrace();
 		}
 		return data;
+	}
+	
+	public String dateToString(Date data) {
+		SimpleDateFormat out = new SimpleDateFormat("dd/MM/yyyy");
+		 
+		String result = out.format(data);
+		//String strDate = dateFormat.format(data);
+		return result;
+	}
+	
+	public String convertStringToDate(Date indate)
+	{
+	   String dateString = null;
+	   DateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy");
+	   /*you can also use DateFormat reference instead of SimpleDateFormat 
+	    * like this: DateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
+	    */
+	   try{
+		dateString = sdfr.format( indate );
+	   }catch (Exception ex ){
+		System.out.println(ex);
+	   }
+	   return dateString;
 	}
 	
 	public boolean isInteger(String inInt) {

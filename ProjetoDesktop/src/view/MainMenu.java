@@ -1,103 +1,367 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package view;
 
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
+import controller.Controller;
+import controller.ControllerAluno;
+import model.Aluno;
+import model.Funcionario;
 
-
-public class MainMenu {
+/**
+ *
+ * @author LUCAS-UTF8
+ */
+@SuppressWarnings("serial")
+public class MainMenu extends javax.swing.JFrame {
 	
-	
-	private static JTextField txtNomeK;
-	private static JTextField txtDataNK;
+    static String[] colunas = {"Código de Cadastro", "Nome", "CPF", "Cargo"};
+    static String[] colunas2 = {"Matrícula", "Nome", "CPF", "Curso"};
+    static DefaultTableModel tableModel = new DefaultTableModel(colunas, 0) {
+    	@Override
+        public boolean isCellEditable(int row, int column) {
+           //all cells false
+           return false;
+        } 
+    };
+    static DefaultTableModel tableModel2 = new DefaultTableModel(colunas2, 0) {
+    	@Override
+        public boolean isCellEditable(int row, int column) {
+           //all cells false
+           return false;
+        } 
+    };
+    private javax.swing.JButton DeleteAlu = new javax.swing.JButton();
+    private javax.swing.JButton DeleteFunc = new javax.swing.JButton();
+    private javax.swing.JButton EditAlu = new javax.swing.JButton();
+    private javax.swing.JTabbedPane abas = new javax.swing.JTabbedPane();
+    private javax.swing.JButton editFunc = new javax.swing.JButton();
+    private javax.swing.JPanel panelAlu = new javax.swing.JPanel();
+    private javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
+    private javax.swing.JScrollPane jScrollPane2 = new javax.swing.JScrollPane();
+    private javax.swing.JButton newAlu = new javax.swing.JButton();
+    private javax.swing.JButton newFunc = new javax.swing.JButton();
+    final JTable tableFunc = new JTable(tableModel);
+    private javax.swing.JScrollPane tablePanelAlu = new javax.swing.JScrollPane();
+    private javax.swing.JTable tableAlu = new javax.swing.JTable(tableModel2);    
+    public static int editar;
+    public static boolean isNew = true;
+   
 
-	private JFrame frame;
+	public static boolean loadTableFunc() {
+		Controller controlF = new Controller();
+    	int tamanhoLista = controlF.listarFuncionarios().size();
+    	if (controlF.listarFuncionarios().size() > 0) {
+    		Funcionario func = controlF.listarFuncionarios().get(tamanhoLista - 1);
+        	Object[] data = {func.getCodCadastro(), func.getNome(), func.getCpf(), func.getCargo()};
+        	if (!isNew) {
+        		tableModel.setRowCount(0);
+            	iniciaListaFunc();
+        	} else {
+            	tableModel.addRow(data);
+        	}
+    	} else {
+    		JOptionPane.showMessageDialog(null, "Funcionário não localizado.", "ERRO", JOptionPane.ERROR_MESSAGE);
+    		CadastroFuncionario.getFrame().dispose();
+    		return false;
+    	}
+    	return true;
+    }
+    
+    public static boolean loadTableAlu() {
+    	ControllerAluno controlA = new ControllerAluno();
+    	int tamanhoLista = controlA.listarAlunos().size();
+    	if (tamanhoLista > 0) {
+    		Aluno alu = controlA.listarAlunos().get(tamanhoLista - 1);
+        	Object[] data = {alu.getMatricula(), alu.getNome(), alu.getCpf(), alu.getCurso()};
+        	if (!isNew) {
+        		tableModel2.setRowCount(0);
+        		iniciaListaAlu();
+        	} else {
+            	tableModel2.addRow(data);
+        	}
+    	} else {
+    		JOptionPane.showMessageDialog(null, "Aluno não localizado.", "ERRO", JOptionPane.ERROR_MESSAGE);
+    		CadastroAluno.getFrmCadastroDeAlunos().dispose();
+    		return false;
+    	}
+    	return true;
+    }
+    
+	public static void iniciaListaFunc() { 
+    	Controller controlF = new Controller();
+    	for (Funcionario func : controlF.listarFuncionarios()) {
+    		Object[] data = {func.getCodCadastro(), func.getNome(), func.getCpf(), func.getCargo()};
+    		
+    		tableModel.addRow(data);
+    	}
+    }
+    
+	public static void iniciaListaAlu() {
+    	ControllerAluno controlA = new ControllerAluno();
+    	for (Aluno alu : controlA.listarAlunos()) {
+    		Object[] data = {alu.getMatricula(), alu.getNome(), alu.getCpf(), alu.getCurso()};
+    		
+    		tableModel2.addRow(data);
+    	}
+    }
+    
+    public MainMenu() {
+        setLocationRelativeTo(null);
+        initComponents();
+    }
+    
 
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings({ })
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+    	editar = -1;
+    	
+    	iniciaListaFunc();
+    	iniciaListaAlu();
+    	
+    	setResizable(false);
+    	
+    	
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainMenu window = new MainMenu();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+        tableFunc.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(tableFunc);
 
-	/**
-	 * Create the application.
-	 */
-	public MainMenu() {
-		initialize();
-	}
+        newFunc.setText("Novo Cadastro");
+        newFunc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newFuncActionPerformed(evt);
+            }
+        });
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {		
-		frame = new JFrame();
-		frame.setBounds(100, 100, 1200, 600);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		frame.setTitle("                                                      CADASTRO DE DEPENDENTES");
-		
-		//Campo texto Nome
-		txtNomeK = new JTextField();
-		txtNomeK.setBounds(150, 28, 250, 20);
-		frame.getContentPane().add(txtNomeK);
-		txtNomeK.setColumns(10);
-		Border Nomborder = BorderFactory.createLineBorder(Color.BLACK);
-	    txtNomeK.setBorder(BorderFactory.createCompoundBorder(Nomborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-				
-		JLabel lblNameK = new JLabel("Nome:* ");
-		lblNameK.setBounds(65, 31, 46, 14);
-		frame.getContentPane().add(lblNameK);
-				
-		JLabel lblNameKEx = new JLabel("Ex: Maria");
-		lblNameKEx.setBounds(420, 31, 166, 14);
-		frame.getContentPane().add(lblNameKEx);
-		
-		//Campo texto Data Nascimento
-		txtDataNK = new JTextField();
-		txtDataNK.setBounds(195, 58, 90, 20);
-		frame.getContentPane().add(txtDataNK);
-		txtDataNK.setColumns(10);
-		Border Datborder = BorderFactory.createLineBorder(Color.BLACK);
-	    txtDataNK.setBorder(BorderFactory.createCompoundBorder(Datborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-				
-		JLabel lblDataK = new JLabel("Data de Nascimento:* ");
-	    lblDataK.setBounds(65, 61, 126, 14);
-		frame.getContentPane().add(lblDataK);
-				
-		JLabel lblDataKEx = new JLabel("Ex: DD/MM/YYYY");
-		lblDataKEx.setBounds(295, 61, 106, 14);
-		frame.getContentPane().add(lblDataKEx);
-		
-		//Bot�o cadastrar
-		JButton btnKidC = new JButton("Adicionar");
-		btnKidC.setBackground(Color.WHITE);
-		btnKidC.setForeground(Color.BLACK);
-		btnKidC.setBounds(90, 107, 100, 23);
-		frame.getContentPane().add(btnKidC);
-		
-		btnKidC.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-		};
-		});
-	}
+        DeleteFunc.setText("Excluir");
+        DeleteFunc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteFuncActionPerformed(evt);
+            }
+        });
+
+        editFunc.setText("Editar");
+        editFunc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editFuncActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addComponent(newFunc)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(editFunc)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(DeleteFunc)
+                .addGap(35, 35, 35))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(newFunc)
+                .addComponent(DeleteFunc)
+                .addComponent(editFunc))
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+        
+        abas.addTab("Funcionarios", jPanel3);
+
+        newAlu.setText("Novo Cadastro");
+        newAlu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newAluActionPerformed(evt);
+            }
+        });
+        
+        EditAlu.setText("Editar");
+        EditAlu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditAluActionPerformed(evt);
+            }
+        });
+
+        DeleteAlu.setText("Excluir");
+        DeleteAlu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteAluActionPerformed(evt);
+            }
+        });
+        
+        tableAlu.getTableHeader().setReorderingAllowed(false);
+        tablePanelAlu.setViewportView(tableAlu);
+
+        javax.swing.GroupLayout panelAluLayout = new javax.swing.GroupLayout(panelAlu);
+        panelAlu.setLayout(panelAluLayout);
+        panelAluLayout.setHorizontalGroup(
+            panelAluLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAluLayout.createSequentialGroup()
+            .addGap(45, 45, 45)
+            .addComponent(newAlu)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 271, Short.MAX_VALUE)
+            .addComponent(EditAlu)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(DeleteAlu)
+            .addGap(35, 35, 35))
+            .addGroup(panelAluLayout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(tablePanelAlu)
+            .addContainerGap())
+        );
+        panelAluLayout.setVerticalGroup(
+            panelAluLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAluLayout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(tablePanelAlu, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(18, 18, 18)
+            .addGroup(panelAluLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(newAlu)
+            .addComponent(EditAlu)
+            .addComponent(DeleteAlu))
+            .addContainerGap(24, Short.MAX_VALUE))
+        );
+
+        abas.addTab("Alunos", panelAlu);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(abas)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(abas, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        pack();
+    }
+
+    private void newAluActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newAluActionPerformed
+        isNew = true;
+    	CadastroAluno.main(null);
+    }
+
+    private void EditAluActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditAluActionPerformed
+    	if (tableAlu.getSelectedRowCount() == 0) {
+    		JOptionPane.showMessageDialog(null, "Nenhum item selecionado.", "ERRO", JOptionPane.ERROR_MESSAGE);
+    	} else {
+    		editar = tableAlu.getSelectedRow();
+            if (editar != -1) {
+            	isNew = false;
+            	ControllerAluno controlA = new ControllerAluno();
+            	Aluno alu = controlA.listarAlunos().get(editar);
+                @SuppressWarnings("unused")
+				CadastroAluno cadalu = new CadastroAluno(alu);
+            }
+    	}
+    }
+    
+    private void DeleteAluActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newAluActionPerformed
+		ControllerAluno controlA = new ControllerAluno();
+    	if (tableAlu.getSelectedRowCount() == 0) {
+    		JOptionPane.showMessageDialog(null, "Nenhum item selecionado.", "ERRO", JOptionPane.ERROR_MESSAGE);
+    	} else {
+    		if (JOptionPane.showConfirmDialog(null, "O aluno com a matrícula de número " + "'" + controlA.listarAlunos().get(tableAlu.getSelectedRow()).getMatricula() + "'" + " será excluido. Tem certeza?", "AVISO", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+    			editar = tableAlu.getSelectedRow();
+            	Aluno alu = controlA.listarAlunos().get(editar);
+            	controlA.excluirAluno(alu);
+            	tableModel2.removeRow(editar);
+    		}
+    	}
+    }
+
+    private void newFuncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newFuncActionPerformed
+        isNew = true;
+    	CadastroFuncionario.main(null);
+    }
+
+    private void editFuncActionPerformed(java.awt.event.ActionEvent evt) {  
+    	if (tableFunc.getSelectedRowCount() == 0) {
+    		JOptionPane.showMessageDialog(null, "Nenhum item selecionado.", "ERRO", JOptionPane.ERROR_MESSAGE);
+    	} else {
+    		editar = tableFunc.getSelectedRow();
+            if (editar != -1) {
+            	isNew = false;
+            	Controller controlF = new Controller();
+            	Funcionario func = controlF.listarFuncionarios().get(editar);
+                @SuppressWarnings("unused")
+				CadastroFuncionario cadfun = new CadastroFuncionario(func);
+            }
+    	}
+    }
+    
+    private void DeleteFuncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newAluActionPerformed
+    	Controller controlF = new Controller();
+    	if (tableFunc.getSelectedRowCount() == 0) {
+    		JOptionPane.showMessageDialog(null, "Nenhum item selecionado.", "ERRO", JOptionPane.ERROR_MESSAGE);
+    	} else {
+    		if (JOptionPane.showConfirmDialog(null, "O funcionário com o código " + "'" + controlF.listarFuncionarios().get(tableFunc.getSelectedRow()).getCodCadastro() + "'" + " será excluido. Tem certeza?", "AVISO", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        			editar = tableFunc.getSelectedRow();
+                	Funcionario func = controlF.listarFuncionarios().get(editar);
+                	controlF.excluirFuncionario(func);
+                	tableModel.removeRow(editar);
+        	}
+    	}
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MainMenu().setVisible(true);
+            }
+        });
+    }
 }

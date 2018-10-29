@@ -5,11 +5,33 @@ import java.util.Date;
 public class Kid {
 	private String nome;
 	private Date dataNascimento;
+	private int fkCodCadastro;
+	private int kidId;
 	
 	public Kid(String nome, Date dataNascimento) {
 		super();
 		this.nome = nome;
 		this.dataNascimento = dataNascimento;
+	}
+	
+	public Kid() {
+		super();
+	}
+
+	public int getKidId() {
+		return kidId;
+	}
+
+	public void setKidId(int kidId) {
+		this.kidId = kidId;
+	}
+
+	public int getFkCodCadastro() {
+		return fkCodCadastro;
+	}
+
+	public void setFkCodCadastro(int fkCodCadastro) {
+		this.fkCodCadastro = fkCodCadastro;
 	}
 
 	public String getNome() {

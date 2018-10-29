@@ -14,31 +14,89 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JRadioButton;
 
-import controller.Controller;
+import controller.ControllerAluno;
 import controller.Util;
 
+import java.util.Date;
+
 import javax.swing.JComboBox;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
+import model.Aluno;
 
 public class CadastroAluno {
 
 
-	private JFrame frame;
-	private JTextField txtNome;
-	private JTextField txtMat;
-	private JTextField txtCpf;
-	private JTextField txtTel;
-	private JTextField txtDataN;
-	private JTextField txtEmail;
+	private static JFrame frmCadastroDeAlunos;
+	private static JTextField txtNome;
+	private static JTextField txtMat;
+	private static JTextField txtCpf;
+	private static JTextField txtTel;
+	private static JTextField txtDataN;
+	private static JTextField txtEmail;
+	private static JTextArea textArea1;
+	private static JRadioButton radioButtonMale;
+	private static JRadioButton radioButtonFemale;
+	private static JComboBox<String> comboBox;
+	private boolean isNew = MainMenu.isNew;
+	@SuppressWarnings("unused")
+	private final Action action = new SwingAction();
+
+	public static JFrame getFrmCadastroDeAlunos() {
+		return frmCadastroDeAlunos;
+	}
+
+	public static JTextField getTxtNome() {
+		return txtNome;
+	}
+
+	public static JTextField getTxtMat() {
+		return txtMat;
+	}
+
+	public static JTextField getTxtCpf() {
+		return txtCpf;
+	}
+
+	public static JTextField getTxtTel() {
+		return txtTel;
+	}
+
+	public static JTextField getTxtDataN() {
+		return txtDataN;
+	}
+
+	public static JTextField getTxtEmail() {
+		return txtEmail;
+	}
+
+	public static JTextArea getTextArea1() {
+		return textArea1;
+	}
+
+	public static JRadioButton getRadioButtonMale() {
+		return radioButtonMale;
+	}
+
+	public static JRadioButton getRadioButtonFemale() {
+		return radioButtonFemale;
+	}
+
+	public static JComboBox<String> getComboBox() {
+		return comboBox;
+	}
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					CadastroAluno window = new CadastroAluno();
-					window.frame.setVisible(true);
+					window.frmCadastroDeAlunos.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -50,234 +108,255 @@ public class CadastroAluno {
 	 * Create the application.
 	 */
 	public CadastroAluno() {
-		initialize();
+		initialize(null);
+	}
+	
+	public CadastroAluno(Aluno aluno) {
+		initialize(aluno);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 730, 489);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+	private void initialize(Aluno aluno) {		
+		frmCadastroDeAlunos = new JFrame();
+		frmCadastroDeAlunos.setBounds(100, 50, 631, 487);
+		frmCadastroDeAlunos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmCadastroDeAlunos.setTitle("                                                                         CADASTRO DE ALUNOS");
+		frmCadastroDeAlunos.getContentPane().setLayout(null);
+		frmCadastroDeAlunos.setResizable(false);
 		
 		//Campo texto Nome
 		txtNome = new JTextField();
-		txtNome.setBounds(150, 28, 250, 20);
-		frame.getContentPane().add(txtNome);
+		txtNome.setBounds(175, 28, 250, 20);
+		frmCadastroDeAlunos.getContentPane().add(txtNome);
 		txtNome.setColumns(10);
 		Border Nomborder = BorderFactory.createLineBorder(Color.BLACK);
-	    txtNome.setBorder(BorderFactory.createCompoundBorder(Nomborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        txtNome.setBorder(BorderFactory.createCompoundBorder(Nomborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        if (!isNew && aluno != null) {        	
+        	txtNome.setText(aluno.getNome());
+        }
 		
 		JLabel lblName = new JLabel("Nome:* ");
-		lblName.setBounds(65, 31, 46, 14);
-		frame.getContentPane().add(lblName);
+		lblName.setBounds(54, 31, 46, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblName);
 		
 		JLabel lblNameEx = new JLabel("Ex: Maria");
-		lblNameEx.setBounds(410, 31, 66, 14);
-		frame.getContentPane().add(lblNameEx);
+		lblNameEx.setBounds(435, 31, 66, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblNameEx);
 		
 		//Campo texto CPF
 		txtCpf = new JTextField();
-		txtCpf.setBounds(150, 58, 250, 20);
-		frame.getContentPane().add(txtCpf);
+		txtCpf.setBounds(175, 59, 250, 20);
+		frmCadastroDeAlunos.getContentPane().add(txtCpf);
 		txtCpf.setColumns(10);
 		Border Cpfborder = BorderFactory.createLineBorder(Color.BLACK);
-	    txtCpf.setBorder(BorderFactory.createCompoundBorder(Cpfborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        txtCpf.setBorder(BorderFactory.createCompoundBorder(Cpfborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		if (!isNew && aluno != null) {
+			txtCpf.setText(aluno.getCpf());
+			txtCpf.setEnabled(false);
+		}
 		
 		JLabel lblCpf = new JLabel("CPF:* ");
-		lblCpf.setBounds(65, 61, 46, 14);
-		frame.getContentPane().add(lblCpf);
+		lblCpf.setBounds(54, 62, 46, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblCpf);
 		
 		JLabel lblCpfEx = new JLabel("Ex: 00000000000");
-		lblCpfEx.setBounds(410, 60, 106, 14);
-		frame.getContentPane().add(lblCpfEx);
+		lblCpfEx.setBounds(435, 62, 106, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblCpfEx);
 		
 		//Campo texto Data Nascimento
 		txtDataN = new JTextField();
-		txtDataN.setBounds(195, 88, 90, 20);
-		frame.getContentPane().add(txtDataN);
+		txtDataN.setBounds(175, 88, 90, 20);
+		frmCadastroDeAlunos.getContentPane().add(txtDataN);
 		txtDataN.setColumns(10);
 		Border Datborder = BorderFactory.createLineBorder(Color.BLACK);
-	    txtDataN.setBorder(BorderFactory.createCompoundBorder(Datborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        txtDataN.setBorder(BorderFactory.createCompoundBorder(Datborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        if (!isNew && aluno != null) {
+        	Util util = new Util();
+        	txtDataN.setText(util.convertStringToDate(aluno.getDataNascimento()));
+        }
 		
 		JLabel lblData = new JLabel("Data de Nascimento:* ");
-		lblData.setBounds(65, 91, 126, 14);
-		frame.getContentPane().add(lblData);
+		lblData.setBounds(54, 91, 126, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblData);
 		
 		JLabel lblDataEx = new JLabel("Ex: DD/MM/YYYY");
 		lblDataEx.setBounds(295, 91, 106, 14);
-		frame.getContentPane().add(lblDataEx);
+		frmCadastroDeAlunos.getContentPane().add(lblDataEx);
 		
-		//Campo texto Matricula	    
+		//Campo texto Matr√≠cula    
 		txtMat = new JTextField();
-		txtMat.setBounds(150, 118, 250, 20);
-		frame.getContentPane().add(txtMat);
+		txtMat.setBounds(175, 118, 250, 20);
+		frmCadastroDeAlunos.getContentPane().add(txtMat);
 		txtMat.setColumns(10);
 		Border Matborder = BorderFactory.createLineBorder(Color.BLACK);
-	    txtMat.setBorder(BorderFactory.createCompoundBorder(Matborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        txtMat.setBorder(BorderFactory.createCompoundBorder(Matborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		if (!isNew && aluno != null) {
+			txtMat.setText(aluno.getMatricula() + "");
+			txtMat.setEnabled(false);
+		}
 		
-		JLabel lblMat = new JLabel("MatrÌcula:* ");
-		lblMat.setBounds(65, 121, 66, 14);
-		frame.getContentPane().add(lblMat);
+		JLabel lblMat = new JLabel("Matr√≠cula:* ");
+		lblMat.setBounds(54, 121, 136, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblMat);
 		
-		JLabel lblMatEx = new JLabel("Ex: 123456789");
-		lblMatEx.setBounds(410, 121, 106, 14);
-		frame.getContentPane().add(lblMatEx);
+		JLabel lblCodEx = new JLabel("Ex: 123456789");
+		lblCodEx.setBounds(435, 121, 106, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblCodEx);
 		
-		//Text area EndereÁo
-		JLabel lblAddress = new JLabel("EndereÁo:* ");
-		lblAddress.setBounds(65, 162, 90, 14);
-		frame.getContentPane().add(lblAddress);
+		//Text area Endere√ßo
+		JLabel lblAddress = new JLabel("Endere√ßo:* ");
+		lblAddress.setBounds(54, 162, 90, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblAddress);
 		
-		JLabel lblAddressEx = new JLabel("Ex: Rua Saci PererÍ Furac„o");
-		lblAddressEx.setBounds(410, 162, 176, 14);
-		frame.getContentPane().add(lblAddressEx);
+		JLabel lblAddressEx = new JLabel("Ex: Rua Saci Perer√™ Furac√£o");
+		lblAddressEx.setBounds(435, 162, 176, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblAddressEx);
 		
-		JTextArea textArea1 = new JTextArea();
-		textArea1.setBounds(150, 157, 250, 40);
-		frame.getContentPane().add(textArea1);
+		textArea1 = new JTextArea();
+		textArea1.setBounds(175, 157, 250, 40);
+		frmCadastroDeAlunos.getContentPane().add(textArea1);
 		Border Endborder = BorderFactory.createLineBorder(Color.BLACK);
-	    textArea1.setBorder(BorderFactory.createCompoundBorder(Endborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        textArea1.setBorder(BorderFactory.createCompoundBorder(Endborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        if (!isNew && aluno != null) {
+			textArea1.setText(aluno.getEndereco());
+		}
 		
 		//Radio Button Sexo
 		JLabel lblSex = new JLabel("Sexo:* ");
-		lblSex.setBounds(65, 208, 46, 14);
-		frame.getContentPane().add(lblSex);
+		lblSex.setBounds(54, 208, 46, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblSex);
 		
 		JLabel lblMale = new JLabel("Masculino");
-		lblMale.setBounds(150, 208, 60, 14);
-		frame.getContentPane().add(lblMale);
+		lblMale.setBounds(175, 208, 60, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblMale);
 		
 		JLabel lblFemale = new JLabel("Feminino");
-		lblFemale.setBounds(320, 208, 60, 14);
-		frame.getContentPane().add(lblFemale);
+		lblFemale.setBounds(345, 208, 60, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblFemale);
 		
-		JRadioButton radioButtonMale = new JRadioButton("");
-		radioButtonMale.setBounds(215, 204, 20, 23);
-		frame.getContentPane().add(radioButtonMale);
+		radioButtonMale = new JRadioButton("M");
+		radioButtonMale.setBounds(240, 204, 20, 23);
+		frmCadastroDeAlunos.getContentPane().add(radioButtonMale);
 
-		JRadioButton radioButtonFemale = new JRadioButton("");
-		radioButtonFemale.setBounds(380, 204, 20, 23);
-		frame.getContentPane().add(radioButtonFemale);
+		radioButtonFemale = new JRadioButton("F");
+		radioButtonFemale.setBounds(405, 204, 20, 23);
+		frmCadastroDeAlunos.getContentPane().add(radioButtonFemale);
+		if (!isNew && aluno != null) {
+			if (aluno.getSexo().equals("M")) {
+				radioButtonMale.setSelected(true);
+			} else {
+				radioButtonFemale.setSelected(true);
+			}
+		}
 		
 		//Campo texto Telefone
 		txtTel = new JTextField();
-		txtTel.setBounds(150, 248, 95, 20);
-		frame.getContentPane().add(txtTel);
+		txtTel.setBounds(175, 248, 95, 20);
+		frmCadastroDeAlunos.getContentPane().add(txtTel);
 		txtTel.setColumns(10);
 		Border Telborder = BorderFactory.createLineBorder(Color.BLACK);
-	    txtTel.setBorder(BorderFactory.createCompoundBorder(Telborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        txtTel.setBorder(BorderFactory.createCompoundBorder(Telborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        if (!isNew && aluno != null) {
+        	txtTel.setText(aluno.getTelefone());
+        }
 				
 		JLabel lblTel = new JLabel("Telefone:* ");
-		lblTel.setBounds(65, 248, 126, 14);
-		frame.getContentPane().add(lblTel);
+		lblTel.setBounds(54, 251, 126, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblTel);
 		
 		JLabel lblTelEx = new JLabel("Ex: (43)99999999");
-		lblTelEx.setBounds(255, 248, 126, 14);
-		frame.getContentPane().add(lblTelEx);
+		lblTelEx.setBounds(280, 250, 126, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblTelEx);
 		
 		//Combobox Curso
-		JLabel lblCourse = new JLabel("Curso:* ");
-		lblCourse.setBounds(65, 288, 67, 14);
-		frame.getContentPane().add(lblCourse);
+		JLabel lblJob = new JLabel("Curso:* ");
+		lblJob.setBounds(54, 288, 67, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblJob);
 		
-		JComboBox<String> comboBox = new JComboBox<String>();
+		comboBox = new JComboBox<String>();
 		comboBox.addItem("Selecionar...");
+		comboBox.addItem("Banco de Dados");
+		comboBox.addItem("Front-end");
 		comboBox.addItem("Java WEB");
-		comboBox.addItem("Cobol");
-		comboBox.addItem("Python");
-		comboBox.addItem(".NET");
-		comboBox.addItem("Redes");
+		comboBox.addItem("Linguagem de Programa√ß√£oo Java");
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 			}
 		});
-		comboBox.setBounds(150, 285, 250, 20);
-		frame.getContentPane().add(comboBox);
-		Border Curborder = BorderFactory.createLineBorder(Color.BLACK);
-	    comboBox.setBorder(BorderFactory.createCompoundBorder(Curborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		
+		comboBox.setBounds(175, 285, 250, 20);
+		frmCadastroDeAlunos.getContentPane().add(comboBox);
+		if (!isNew && aluno != null) {
+			comboBox.setSelectedItem(aluno.getCurso());
+		}
+	    
 		//Campo texto E-Mail
 		txtEmail = new JTextField();
-		txtEmail.setBounds(150, 328, 250, 20);
-		frame.getContentPane().add(txtEmail);
+		txtEmail.setBounds(175, 328, 250, 20);
+		frmCadastroDeAlunos.getContentPane().add(txtEmail);
 		txtEmail.setColumns(10);
 		Border Mailborder = BorderFactory.createLineBorder(Color.BLACK);
 	    txtEmail.setBorder(BorderFactory.createCompoundBorder(Mailborder, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+	    if (!isNew && aluno != null) {
+	    	txtEmail.setText(aluno.getEmail());
+	    }
 		
 		JLabel lblEmail = new JLabel("E-Mail:* ");
-		lblEmail.setBounds(65, 331, 126, 14);
-		frame.getContentPane().add(lblEmail);
+		lblEmail.setBounds(54, 331, 126, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblEmail);
 		
 		JLabel lblEmailEx = new JLabel("Ex: seuemail@dominio.com");
-		lblEmailEx.setBounds(410, 331, 176, 14);
-		frame.getContentPane().add(lblEmailEx);
+		lblEmailEx.setBounds(435, 331, 176, 14);
+		frmCadastroDeAlunos.getContentPane().add(lblEmailEx);
 		
-		//Botoes
+		
+		//Botoes		
 		JButton btnClear = new JButton("Limpar");
 		btnClear.setBackground(Color.BLACK);
 		btnClear.setForeground(Color.RED);
-		btnClear.setBounds(312, 387, 89, 23);
-		frame.getContentPane().add(btnClear);
+		btnClear.setBounds(427, 394, 89, 23);
+		frmCadastroDeAlunos.getContentPane().add(btnClear);
 		
 		JButton btnSubmit = new JButton("Cadastrar");
+		if (!isNew) {
+			btnSubmit.setText("Salvar");
+		}
 		btnSubmit.setBackground(Color.BLACK);
 		btnSubmit.setForeground(Color.RED);
-		btnSubmit.setBounds(65, 387, 100, 23);
-		frame.getContentPane().add(btnSubmit);
+		btnSubmit.setBounds(65, 394, 100, 23);
+		frmCadastroDeAlunos.getContentPane().add(btnSubmit);			
 		btnSubmit.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				Util util = new Util();
-				String errorMsg = "";
-				boolean erro = false;
+				ControllerAluno con = new ControllerAluno();
 				
-				if(txtNome.getText().isEmpty()) {
-					errorMsg = errorMsg + "-Nome inv·lido ou n„o preenchido. \n";
-					erro = true;
-				}
-				if(txtMat.getText().isEmpty() 
-						|| txtMat.getText().length() > 9) {
-					errorMsg = errorMsg + "-MatrÌcula inv·lida ou n„o preenchida. \n";
-					erro = true;
-				}if ((textArea1.getText().isEmpty())) {
-					errorMsg = errorMsg + "-EndereÁo inv·lido ou n„o preenchido. \n";
-					erro = true;
-				}if ((radioButtonMale.isSelected())&&(radioButtonFemale.isSelected())) {
-					errorMsg = errorMsg + "-Selecione apenas um dos sexos. \n";
-					erro = true;
-				}if ((comboBox.getSelectedItem().equals("Selecionar..."))) {
-					errorMsg = errorMsg + "-Selecione um curso. \n";
-					erro = true;
-				}if (txtCpf.getText().isEmpty() || util.isCPF(txtCpf.getText()) == false) {
-					errorMsg = errorMsg + "-CPF inv·lido ou n„o preenchido. \n";
-					erro = true;
-				}if (txtTel.getText().isEmpty()) {
-					errorMsg = errorMsg + "-Telefone inv·lido ou n„o preenchido. \n";
-					erro = true;
-				}if (txtDataN.getText().isEmpty() || util.validaData(txtDataN.getText()) == false) {
-					errorMsg = errorMsg + "-Data de nascimento inv·lida ou n„o preenchida. \n";
-					erro = true;
-				}if (txtEmail.getText().isEmpty()) {
-					errorMsg = errorMsg + "-E-Mail inv·lido ou n„o preenchido. \n";
-					erro = true;
-				}
-				
-				if (erro) {
-					JOptionPane.showMessageDialog(null, "**** Por favor corrija os seguintes erros: **** \n" + errorMsg, "ERRO", JOptionPane.ERROR_MESSAGE);
-				} else {
-					JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
-					Controller con = new Controller();
-					con.cadastrarAluno();
+				if (temErro() != "") {
+					JOptionPane.showMessageDialog(null, "**** Por favor corrija os seguintes erros: **** \n" + temErro(), "ERRO", JOptionPane.ERROR_MESSAGE);
+					
+				} else if (isNew) {
+	                con.cadastrarAluno(buildAluno());
+    				JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+    				MainMenu.loadTableAlu();
+    				
+    				frmCadastroDeAlunos.dispose();
+    				
+    				
+				} else {				
+					editaAluno(aluno);
+					if (MainMenu.loadTableAlu()) {
+						JOptionPane.showMessageDialog(null, "Cadastro atualizado com sucesso!");
+						isNew = true;
+						frmCadastroDeAlunos.dispose();
+					}
 				}
 			}
 		});
+		
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				txtNome.setText(null);
-				txtCpf.setText(null);
 				txtTel.setText(null);
 				txtEmail.setText(null);
 				txtDataN.setText(null);
@@ -286,7 +365,102 @@ public class CadastroAluno {
 				radioButtonMale.setSelected(false);
 				comboBox.setSelectedItem("Selecionar...");
 			}
-		}); 
+		});
+		frmCadastroDeAlunos.setVisible(true);
+	}
+	
+	@SuppressWarnings("static-access")
+	public static boolean checkMatAlu(String txtMat) {
+		ControllerAluno con = new ControllerAluno();
+		boolean aux = false;
+		for (int i = 0; i < con.arrayAluno.size(); i++) {
+			if (Integer.parseInt(txtMat) == (con.arrayAluno.get(i).getMatricula())) {
+				aux = true;
+			} else {
+				aux = false;
+			}
+		}
+		return aux;
+	}
+	
+	public String temErro() {
+		Util util = new Util();
+		String errorMsg = "";
+		
+		if(CadastroAluno.getTxtNome().getText().isEmpty()) {
+			errorMsg = errorMsg + "-Nome inv√°lido ou n√£o preenchido. \n";
+		}
+		if (CadastroAluno.getTxtMat().getText().isEmpty()
+				|| CadastroAluno.getTxtMat().getText().length() > 9
+				|| util.isInteger(CadastroAluno.getTxtMat().getText()) == false) {
+			errorMsg = errorMsg + "-Matr√≠cula inv√°lida ou n√£o preenchida. \n";
+		} if (checkMatAlu(txtMat.getText()) == true && isNew) {
+			errorMsg = errorMsg + "-N√∫mero de matr√≠cula j√° existe. \n";
+		} if ((CadastroAluno.getTextArea1().getText().isEmpty())) {
+			errorMsg = errorMsg + "-Endere√ßo inv√°lido ou n√£o preenchido. \n";
+		} if ((CadastroAluno.getRadioButtonMale().isSelected())&&(CadastroAluno.getRadioButtonFemale().isSelected())) {
+			errorMsg = errorMsg + "-Selecione apenas um dos sexos. \n";
+		} if ((CadastroAluno.getComboBox().getSelectedItem().equals("Selecionar..."))) {
+			errorMsg = errorMsg + "-Selecione um cargo. \n";
+		} if (CadastroAluno.getTxtCpf().getText().isEmpty() || util.isCPF(CadastroAluno.getTxtCpf().getText()) == false) {
+			errorMsg = errorMsg + "-CPF inv√°lido ou n√£o preenchido. \n";
+		} if (CadastroAluno.getTxtTel().getText().isEmpty()) {
+			errorMsg = errorMsg + "-Telefone inv√°lido ou n√£o preenchido. \n";
+		} if (CadastroAluno.getTxtDataN().getText().isEmpty() || util.validaData(CadastroAluno.getTxtDataN().getText()) == false) {
+			errorMsg = errorMsg + "-Data de nascimento inv√°lida ou n√£o preenchida. \n";
+		} if (CadastroAluno.getTxtEmail().getText().isEmpty()) {
+			errorMsg = errorMsg + "-E-Mail inv√°lido ou n√£o preenchido. \n";
+		}
+		return errorMsg;
+	}	
+        
+	public static Aluno buildAluno() {
+		String sex = "";
+		if (CadastroAluno.radioButtonMale.isSelected()) {
+			sex = "M";
+		} else if (CadastroAluno.radioButtonFemale.isSelected()) {
+			sex = "F";
+		}
+		Util util = new Util();
+		Date dataN = new Date();
+        dataN = util.transformaData(txtDataN.getText());
+		
+        Aluno alu = new Aluno(txtCpf.getText(), txtTel.getText(), txtNome.getText(),
+                                           dataN, sex, textArea1.getText(), txtEmail.getText(),
+                                           Integer.parseInt(txtMat.getText()), (String) comboBox.getSelectedItem());
+        
+        return alu;
+	}
+	
+	public static void editaAluno(Aluno aluno) {
+		Util util = new Util();
+		Date dataN = new Date();
+		dataN = util.transformaData(txtDataN.getText());
+		String sex = "";
+		if (radioButtonMale.isSelected()) {
+			sex = radioButtonMale.getText();
+		} else if (radioButtonFemale.isSelected()) {
+			sex = radioButtonFemale.getText();
+		}
+		
+		aluno.setCurso(comboBox.getSelectedItem().toString());
+		aluno.setSexo(sex);
+		aluno.setDataNascimento(dataN);
+		aluno.setEmail(txtEmail.getText());
+		aluno.setEndereco(textArea1.getText());
+		aluno.setNome(txtNome.getText());
+		
+		ControllerAluno controlA = new ControllerAluno();
+		controlA.editarAluno(aluno);
+	}
+	
+	@SuppressWarnings("serial")
+	private class SwingAction extends AbstractAction {
+		public SwingAction() {
+			putValue(NAME, "SwingAction");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+		}
 	}
 }
-
